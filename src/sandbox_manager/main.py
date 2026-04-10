@@ -129,6 +129,11 @@ _static_dir = Path(__file__).resolve().parent.parent.parent / "static"
 if _static_dir.is_dir():
     app.mount("/assets", StaticFiles(directory=_static_dir / "assets"), name="static-assets")
 
+    @app.get("/")
+    async def serve_index():
+        """根路径返回 index.html"""
+        return FileResponse(_static_dir / "index.html")
+
     @app.get("/{full_path:path}")
     async def serve_spa(full_path: str):
         """SPA fallback：非 API 路由都返回 index.html"""
