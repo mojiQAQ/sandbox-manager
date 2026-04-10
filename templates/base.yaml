@@ -1,0 +1,13 @@
+# 模板基础配置说明
+# 所有内置模板都基于此格式定义
+#
+# 字段说明:
+#   name            - 模板名称（唯一标识）
+#   description     - 模板描述
+#   base_image      - 基础 Docker 镜像
+#   connect_type    - 连接类型: shell | url | port
+#   connect_port    - 连接端口（url/port 类型时使用）
+#   install_commands - 安装命令列表（按顺序执行）
+#   entrypoint      - 容器启动命令
+#   env             - 环境变量
+#   ports           - 端口映射（容器端口: 宿主端口）

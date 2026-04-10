@@ -1,0 +1,15 @@
+name: openclaw
+description: "预装 OpenClaw Gateway 的开发环境"
+base_image: ubuntu:22.04
+connect_type: shell
+connect_port: 7860
+install_commands:
+  - "apt-get update && apt-get install -y curl git sudo nodejs npm"
+  - "npm install -g openclaw"
+entrypoint:
+  - "tail"
+  - "-f"
+  - "/dev/null"
+env: {}
+ports:
+  "7860": 7860

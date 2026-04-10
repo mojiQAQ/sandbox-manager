@@ -1,0 +1,232 @@
+/* === Cyberpunk Terminal Theme === */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+:root {
+  --bg-primary: #0a0e17;
+  --bg-secondary: #111827;
+  --bg-tertiary: #0d1117;
+  --border-glow: rgba(6, 182, 212, 0.08);
+  --cyan-500: #06b6d4;
+  --purple-500: #8b5cf6;
+  --green-500: #10b981;
+  --yellow-500: #f59e0b;
+  --red-500: #ef4444;
+  --blue-500: #3b82f6;
+  --gray-500: #6b7280;
+  --text-primary: #e5e7eb;
+  --text-secondary: #9ca3af;
+  --glow-cyan: 0 0 20px rgba(6, 182, 212, 0.15);
+  --glow-cyan-strong: 0 0 30px rgba(6, 182, 212, 0.25);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body, #root {
+  height: 100%;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-primary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(6, 182, 212, 0.2);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(6, 182, 212, 0.4);
+}
+
+/* Glow card effect */
+.glow-card {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-glow);
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.glow-card:hover {
+  border-color: rgba(6, 182, 212, 0.2);
+  box-shadow: var(--glow-cyan);
+}
+
+/* Stat card */
+.stat-card {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-glow);
+  border-radius: 8px;
+  padding: 20px;
+  transition: all 0.3s ease;
+}
+
+.stat-card:hover {
+  border-color: rgba(6, 182, 212, 0.15);
+  box-shadow: 0 0 12px rgba(6, 182, 212, 0.08);
+}
+
+/* Template quick-launch card */
+.template-card {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-glow);
+  border-radius: 12px;
+  padding: 24px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+.template-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--cyan-500), transparent);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.template-card:hover {
+  border-color: rgba(6, 182, 212, 0.25);
+  box-shadow: var(--glow-cyan);
+  transform: translateY(-2px);
+}
+
+.template-card:hover::before {
+  opacity: 1;
+}
+
+/* Monospace text */
+.mono {
+  font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+  font-size: 0.85em;
+}
+
+/* Status pulse animation for building */
+@keyframes pulse-blue {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.status-building {
+  animation: pulse-blue 1.5s ease-in-out infinite;
+}
+
+/* Connection indicator */
+.indicator-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-right: 8px;
+}
+
+.indicator-dot.connected {
+  background-color: var(--green-500);
+  box-shadow: 0 0 6px rgba(16, 185, 129, 0.5);
+}
+
+.indicator-dot.disconnected {
+  background-color: var(--red-500);
+  box-shadow: 0 0 6px rgba(239, 68, 68, 0.5);
+}
+
+/* Section title */
+.section-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.section-title::before {
+  content: '';
+  display: inline-block;
+  width: 3px;
+  height: 18px;
+  background: var(--cyan-500);
+  border-radius: 2px;
+}
+
+/* Quick launch section hero */
+.quick-launch-section {
+  background: linear-gradient(135deg, rgba(6, 182, 212, 0.05) 0%, rgba(139, 92, 246, 0.03) 100%);
+  border: 1px solid var(--border-glow);
+  border-radius: 12px;
+  padding: 24px;
+}
+
+/* Antd overrides */
+.ant-table-wrapper .ant-table {
+  background: transparent;
+}
+
+.ant-btn-primary {
+  text-shadow: none;
+}
+
+/* Sidebar logo area */
+.sidebar-logo {
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-bottom: 1px solid var(--border-glow);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--cyan-500);
+  letter-spacing: 1px;
+}
+
+.sidebar-logo .logo-bracket {
+  color: var(--gray-500);
+}
+
+/* Terminal page */
+.terminal-container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.terminal-header {
+  background: var(--bg-secondary);
+  border-bottom: 1px solid var(--border-glow);
+  padding: 12px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.terminal-body {
+  flex: 1;
+  padding: 4px;
+  background: #000000;
+}

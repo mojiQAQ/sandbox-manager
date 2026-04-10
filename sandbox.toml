@@ -1,0 +1,9 @@
+# OpenSandbox Server 配置
+# 详见: https://github.com/nicepkg/opensandbox
+
+[server]
+host = "0.0.0.0"
+port = 8080
+
+[runtime]
+type = "docker"

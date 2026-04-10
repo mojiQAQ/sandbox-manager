@@ -1,0 +1,62 @@
+# Sandbox Manager 生产部署配置
+#
+# 使用方式:
+#   docker compose -f docker-compose.prod.yaml up -d --build
+#   docker compose -f docker-compose.prod.yaml logs -f
+#   docker compose -f docker-compose.prod.yaml down
+
+services:
+  # OpenSandbox Server - 沙盒运行时（仅内部网络，不暴露端口）
+  opensandbox-server:
+    build:
+      context: .
+      dockerfile: Dockerfile.opensandbox
+    container_name: opensandbox-server
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./sandbox.toml:/etc/opensandbox/sandbox.toml:ro
+    networks:
+      - sandbox-internal
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Sandbox Manager - 管理服务 + Web UI（对外端口）
+  sandbox-manager:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: sandbox-manager
+    ports:
+      - "${SBXMGR_PORT:-8000}:8000"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - sandbox-data:/app/data
+      - ./templates:/app/templates:ro
+    environment:
+      - SBXMGR_OPENSANDBOX_HOST=opensandbox-server
+      - SBXMGR_OPENSANDBOX_PORT=8080
+      - SBXMGR_DATABASE_PATH=/app/data/sandbox_manager.db
+      - SBXMGR_DEBUG=${SBXMGR_DEBUG:-false}
+    depends_on:
+      opensandbox-server:
+        condition: service_healthy
+    networks:
+      - sandbox-internal
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/v1/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+networks:
+  sandbox-internal:
+    driver: bridge
+
+volumes:
+  sandbox-data:
+    driver: local

@@ -1,0 +1,19 @@
+FROM python:3.11-slim
+
+# 安装系统依赖（curl 用于 healthcheck）
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends curl && \
+    rm -rf /var/lib/apt/lists/*
+
+# 预装 opensandbox-server，避免启动时 pip install
+RUN pip install --no-cache-dir opensandbox-server
+
+# 复制配置文件
+COPY sandbox.toml /etc/opensandbox/sandbox.toml
+
+# 初始化配置（忽略已存在的情况）
+RUN opensandbox-server init-config /etc/opensandbox/sandbox.toml --runtime docker 2>/dev/null || true
+
+EXPOSE 8080
+
+CMD ["opensandbox-server", "--config", "/etc/opensandbox/sandbox.toml"]

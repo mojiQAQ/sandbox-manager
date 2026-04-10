@@ -1,0 +1,16 @@
+name: claude-code
+description: "预装 Claude Code CLI 的开发环境，适合 AI 辅助编码"
+base_image: ubuntu:22.04
+connect_type: shell
+install_commands:
+  - "apt-get update && apt-get install -y curl git sudo"
+  - "curl -fsSL https://deb.nodesource.com/setup_20.x | bash -"
+  - "apt-get install -y nodejs"
+  - "npm install -g @anthropic-ai/claude-code"
+entrypoint:
+  - "tail"
+  - "-f"
+  - "/dev/null"
+env:
+  ANTHROPIC_API_KEY: ""
+ports: {}

@@ -1,0 +1,13 @@
+name: python-dev
+description: "Python 3.11 开发环境，预装 numpy、pandas、matplotlib"
+base_image: ubuntu:22.04
+connect_type: shell
+install_commands:
+  - "apt-get update && apt-get install -y python3.11 python3-pip git curl"
+  - "pip3 install numpy pandas matplotlib ipython"
+entrypoint:
+  - "tail"
+  - "-f"
+  - "/dev/null"
+env: {}
+ports: {}

@@ -1,0 +1,57 @@
+# Sandbox Manager + OpenSandbox Server 部署配置
+#
+# 使用方式:
+#   docker-compose up -d           # 启动所有服务
+#   docker-compose logs -f         # 查看日志
+#   docker-compose down            # 停止所有服务
+#
+# 注意: OpenSandbox server 需要访问宿主机的 Docker Engine，
+# 因此通过挂载 docker.sock 实现。
+
+services:
+  # OpenSandbox Server - 沙盒运行时
+  opensandbox-server:
+    image: python:3.11-slim
+    container_name: opensandbox-server
+    command: >
+      bash -c "
+        pip install opensandbox-server &&
+        opensandbox-server init-config /etc/opensandbox/sandbox.toml --runtime docker 2>/dev/null;
+        opensandbox-server --config /etc/opensandbox/sandbox.toml
+      "
+    ports:
+      - "8080:8080"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./sandbox.toml:/etc/opensandbox/sandbox.toml:ro
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Sandbox Manager - 管理服务
+  sandbox-manager:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: sandbox-manager
+    ports:
+      - "8000:8000"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - sandbox-data:/app/data
+      - ./templates:/app/templates:ro
+    environment:
+      - SBXMGR_OPENSANDBOX_HOST=opensandbox-server
+      - SBXMGR_OPENSANDBOX_PORT=8080
+      - SBXMGR_DATABASE_PATH=/app/data/sandbox_manager.db
+    depends_on:
+      opensandbox-server:
+        condition: service_healthy
+    restart: unless-stopped
+
+volumes:
+  sandbox-data:
+    driver: local
