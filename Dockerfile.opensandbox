@@ -6,14 +6,12 @@ RUN sed -i 's|deb.debian.org|mirrors.aliyun.com|g' /etc/apt/sources.list.d/debia
     apt-get install -y --no-install-recommends curl && \
     rm -rf /var/lib/apt/lists/*
 
-# 预装 opensandbox-server，避免启动时 pip install
+# 预装 opensandbox-server
 RUN pip install --no-cache-dir -i https://mirrors.aliyun.com/pypi/simple/ opensandbox-server
 
 # 复制配置文件
+RUN mkdir -p /etc/opensandbox
 COPY sandbox.toml /etc/opensandbox/sandbox.toml
-
-# 初始化配置（忽略已存在的情况）
-RUN opensandbox-server init-config /etc/opensandbox/sandbox.toml --runtime docker 2>/dev/null || true
 
 EXPOSE 8080
 

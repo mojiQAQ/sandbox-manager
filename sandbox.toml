@@ -1,9 +1,20 @@
 # OpenSandbox Server 配置
-# 详见: https://github.com/nicepkg/opensandbox
+# 详见: https://github.com/alibaba/OpenSandbox
 
 [server]
 host = "0.0.0.0"
 port = 8080
+log_level = "INFO"
+max_sandbox_timeout_seconds = 86400
 
 [runtime]
 type = "docker"
+execd_image = "opensandbox/execd:v1.0.7"
+
+[docker]
+network_mode = "bridge"
+pids_limit = 4096
+no_new_privileges = true
+
+[ingress]
+mode = "direct"
