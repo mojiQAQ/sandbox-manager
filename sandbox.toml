@@ -12,7 +12,7 @@ type = "docker"
 execd_image = "opensandbox/execd:v1.0.7"
 
 [docker]
-network_mode = "bridge"
+network_mode = "sandbox-manager_sandbox-internal"
 pids_limit = 4096
 no_new_privileges = true
 # 当 server 在容器内运行时，需要指定宿主机 IP 以访问沙盒容器端口
