@@ -27,6 +27,13 @@ def _rewrite_url(url: str) -> str:
     return url
 
 
+def _build_proxy_url(sandbox_id: str, port: int) -> str:
+    """构建通过 sandbox-manager 代理的 URL"""
+    if settings.external_host:
+        return f"http://{settings.external_host}:{settings.port}/api/v1/proxy/{sandbox_id}/{port}/"
+    return f"/api/v1/proxy/{sandbox_id}/{port}/"
+
+
 class ConnectorService:
     """自适应连接服务"""
 
@@ -100,21 +107,7 @@ class ConnectorService:
         url = None
 
         if connect_port:
-            try:
-                url = await self._sandbox_service.get_endpoint(sandbox_id, connect_port)
-                # OpenSandbox 可能返回不含协议前缀的 URL，如 "127.0.0.1:PORT/proxy/8443"
-                if url and not url.startswith(("http://", "https://")):
-                    url = f"http://{url}"
-                if url:
-                    url = _rewrite_url(url)
-            except Exception:
-                logger.warning(
-                    "通过 OpenSandbox 获取端点失败，将尝试 Docker 端口映射: sandbox=%s, port=%d",
-                    sandbox_id,
-                    connect_port,
-                )
-                # 回退: 使用 localhost + 端口映射
-                url = f"http://localhost:{connect_port}"
+            url = _build_proxy_url(sandbox_id, connect_port)
 
         result = {
             "connect_type": "url",
@@ -127,7 +120,7 @@ class ConnectorService:
         # 如果有额外端口信息也一并返回（转为 list[dict] 格式）
         if ports:
             result["ports"] = [
-                {"name": name, "container_port": port, "url": f"http://localhost:{port}"}
+                {"name": name, "container_port": port, "url": _build_proxy_url(sandbox_id, port)}
                 for name, port in ports.items()
             ]
 

@@ -2,7 +2,7 @@
 
 from fastapi import APIRouter
 
-from sandbox_manager.api import health, sandboxes, templates, ws_terminal
+from sandbox_manager.api import health, proxy, sandboxes, templates, ws_terminal
 
 api_router = APIRouter(prefix="/api/v1")
 
@@ -11,3 +11,4 @@ api_router.include_router(health.router)
 api_router.include_router(templates.router)
 api_router.include_router(sandboxes.router)
 api_router.include_router(ws_terminal.router)
+api_router.include_router(proxy.router)
