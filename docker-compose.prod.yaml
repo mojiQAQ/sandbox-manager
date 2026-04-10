@@ -17,7 +17,7 @@ services:
       - ./sandbox.toml:/etc/opensandbox/sandbox.toml:ro
     networks:
       - sandbox-internal
-      - default
+      - host-bridge
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
@@ -57,6 +57,9 @@ services:
 networks:
   sandbox-internal:
     driver: bridge
+  host-bridge:
+    external: true
+    name: bridge
 
 volumes:
   sandbox-data:
