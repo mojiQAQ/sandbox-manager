@@ -15,6 +15,8 @@ execd_image = "opensandbox/execd:v1.0.7"
 network_mode = "bridge"
 pids_limit = 4096
 no_new_privileges = true
+# 当 server 在容器内运行时，需要指定宿主机 IP 以访问沙盒容器端口
+host_ip = "172.17.0.1"
 
 [ingress]
 mode = "direct"

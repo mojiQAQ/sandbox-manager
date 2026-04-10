@@ -17,6 +17,7 @@ services:
       - ./sandbox.toml:/etc/opensandbox/sandbox.toml:ro
     networks:
       - sandbox-internal
+      - default
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
