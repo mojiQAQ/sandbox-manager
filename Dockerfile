@@ -1,5 +1,5 @@
 # === 阶段 1：构建前端 ===
-FROM docker.m.daocloud.io/library/node:22-alpine AS frontend-builder
+FROM node:22-alpine AS frontend-builder
 
 WORKDIR /web
 COPY web/package.json web/package-lock.json ./
@@ -8,7 +8,7 @@ COPY web/ .
 RUN npm run build
 
 # === 阶段 2：安装后端依赖 ===
-FROM docker.m.daocloud.io/library/python:3.11-slim AS backend-builder
+FROM python:3.11-slim AS backend-builder
 
 WORKDIR /app
 COPY pyproject.toml .
@@ -16,7 +16,7 @@ COPY src/ src/
 RUN pip install --no-cache-dir .
 
 # === 阶段 3：最终镜像 ===
-FROM docker.m.daocloud.io/library/python:3.11-slim
+FROM python:3.11-slim
 
 WORKDIR /app
 
