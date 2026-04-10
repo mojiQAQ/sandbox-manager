@@ -124,9 +124,19 @@ app.add_middleware(
 app.include_router(api_router)
 
 # --- 前端静态文件服务 ---
-# 生产环境：前端构建产物放在 /app/static 目录
-_static_dir = Path(__file__).resolve().parent.parent.parent / "static"
-if _static_dir.is_dir():
+# 优先使用环境变量，其次检查 /app/static（Docker 部署），最后检查项目目录
+import os as _os
+
+_static_dir_env = _os.environ.get("SBXMGR_STATIC_DIR")
+if _static_dir_env:
+    _static_dir = Path(_static_dir_env)
+else:
+    _candidates = [
+        Path("/app/static"),
+        Path(__file__).resolve().parent.parent.parent / "static",
+    ]
+    _static_dir = next((p for p in _candidates if p.is_dir()), None)  # type: ignore[assignment]
+if _static_dir and _static_dir.is_dir():
     app.mount("/assets", StaticFiles(directory=_static_dir / "assets"), name="static-assets")
 
     @app.get("/")
