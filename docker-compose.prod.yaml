@@ -6,12 +6,14 @@
 #   docker compose -f docker-compose.prod.yaml down
 
 services:
-  # OpenSandbox Server - 沙盒运行时（仅内部网络，不暴露端口）
+  # OpenSandbox Server - 沙盒运行时
   opensandbox-server:
     build:
       context: .
       dockerfile: Dockerfile.opensandbox
     container_name: opensandbox-server
+    ports:
+      - "8080:8080"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./sandbox.toml:/etc/opensandbox/sandbox.toml:ro
@@ -40,6 +42,7 @@ services:
       - SBXMGR_OPENSANDBOX_HOST=opensandbox-server
       - SBXMGR_OPENSANDBOX_PORT=8080
       - SBXMGR_DATABASE_PATH=/app/data/sandbox_manager.db
+      - SBXMGR_EXTERNAL_HOST=${SBXMGR_EXTERNAL_HOST:-}
       - SBXMGR_DEBUG=${SBXMGR_DEBUG:-false}
     depends_on:
       opensandbox-server:

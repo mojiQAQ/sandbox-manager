@@ -38,6 +38,9 @@ class Settings(BaseSettings):
     port: int = 8000
     debug: bool = False
 
+    # --- 外部访问地址（用于替换 OpenSandbox 返回的内部域名）---
+    external_host: str = ""
+
     # --- 内置模板路径 ---
     builtin_templates_dir: str = "templates"
 

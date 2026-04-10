@@ -10,9 +10,21 @@
 
 import logging
 
+from sandbox_manager.config import settings
 from sandbox_manager.services.sandbox_service import SandboxService
 
 logger = logging.getLogger(__name__)
+
+
+def _rewrite_url(url: str) -> str:
+    """将 OpenSandbox 返回的内部 URL 替换为外部可访问地址"""
+    if not settings.external_host:
+        return url
+    # 替换内部域名 opensandbox_host:port -> external_host:port
+    internal = f"{settings.opensandbox_host}:{settings.opensandbox_port}"
+    if internal in url:
+        return url.replace(internal, f"{settings.external_host}:{settings.opensandbox_port}")
+    return url
 
 
 class ConnectorService:
@@ -93,6 +105,8 @@ class ConnectorService:
                 # OpenSandbox 可能返回不含协议前缀的 URL，如 "127.0.0.1:PORT/proxy/8443"
                 if url and not url.startswith(("http://", "https://")):
                     url = f"http://{url}"
+                if url:
+                    url = _rewrite_url(url)
             except Exception:
                 logger.warning(
                     "通过 OpenSandbox 获取端点失败，将尝试 Docker 端口映射: sandbox=%s, port=%d",
@@ -148,6 +162,8 @@ class ConnectorService:
                 url = await self._sandbox_service.get_endpoint(sandbox_id, port)
                 if url and not url.startswith(("http://", "https://")):
                     url = f"http://{url}"
+                if url:
+                    url = _rewrite_url(url)
                 mapping["url"] = url
             except Exception:
                 mapping["url"] = f"http://localhost:{port}"
