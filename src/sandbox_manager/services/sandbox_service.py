@@ -37,6 +37,7 @@ class SandboxService:
                 api_key=settings.opensandbox_api_key,
                 protocol=settings.opensandbox_protocol,
                 request_timeout=timedelta(seconds=120),
+                use_server_proxy=True,
             )
         return self._config
 
