@@ -1,12 +1,13 @@
 FROM python:3.11-slim
 
 # 安装系统依赖（curl 用于 healthcheck）
-RUN apt-get update && \
+RUN sed -i 's|deb.debian.org|mirrors.aliyun.com|g' /etc/apt/sources.list.d/debian.sources && \
+    apt-get update && \
     apt-get install -y --no-install-recommends curl && \
     rm -rf /var/lib/apt/lists/*
 
 # 预装 opensandbox-server，避免启动时 pip install
-RUN pip install --no-cache-dir opensandbox-server
+RUN pip install --no-cache-dir -i https://mirrors.aliyun.com/pypi/simple/ opensandbox-server
 
 # 复制配置文件
 COPY sandbox.toml /etc/opensandbox/sandbox.toml

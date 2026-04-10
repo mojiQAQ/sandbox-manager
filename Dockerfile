@@ -3,7 +3,7 @@ FROM node:22-alpine AS frontend-builder
 
 WORKDIR /web
 COPY web/package.json web/package-lock.json ./
-RUN npm ci
+RUN npm ci --registry=https://registry.npmmirror.com
 COPY web/ .
 RUN npm run build
 
@@ -13,7 +13,7 @@ FROM python:3.11-slim AS backend-builder
 WORKDIR /app
 COPY pyproject.toml .
 COPY src/ src/
-RUN pip install --no-cache-dir .
+RUN pip install --no-cache-dir -i https://mirrors.aliyun.com/pypi/simple/ .
 
 # === 阶段 3：最终镜像 ===
 FROM python:3.11-slim
@@ -21,7 +21,8 @@ FROM python:3.11-slim
 WORKDIR /app
 
 # 安装系统依赖（curl 用于 healthcheck）
-RUN apt-get update && \
+RUN sed -i 's|deb.debian.org|mirrors.aliyun.com|g' /etc/apt/sources.list.d/debian.sources && \
+    apt-get update && \
     apt-get install -y --no-install-recommends curl && \
     rm -rf /var/lib/apt/lists/*
 
