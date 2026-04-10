@@ -16,10 +16,9 @@ import {
   PlayCircleOutlined,
   CameraOutlined,
   CodeOutlined,
-  LinkOutlined,
   GlobalOutlined,
 } from '@ant-design/icons'
-import { useNavigate } from 'react-router-dom'
+import 'react-router-dom'
 import usePolling from '../hooks/usePolling'
 import {
   getSandboxes,
@@ -37,7 +36,6 @@ import type { SandboxListItem } from '../api/types'
 const { Text } = Typography
 
 export default function Sandboxes() {
-  const navigate = useNavigate()
   const [sandboxes, setSandboxes] = useState<SandboxListItem[]>([])
   const [loading, setLoading] = useState(false)
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([])

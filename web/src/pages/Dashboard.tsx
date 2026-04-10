@@ -7,7 +7,7 @@ import {
   InfoCircleOutlined,
   RocketOutlined,
 } from '@ant-design/icons'
-import { useNavigate } from 'react-router-dom'
+import 'react-router-dom'
 import usePolling from '../hooks/usePolling'
 import { getSystemStatus, getHealth, getSandboxes, getConnectInfo } from '../api/sandboxes'
 import { getTemplates, buildTemplate } from '../api/templates'
@@ -20,7 +20,6 @@ import type { SystemStatus, HealthResponse, TemplateListItem, SandboxListItem } 
 const { Text } = Typography
 
 export default function Dashboard() {
-  const navigate = useNavigate()
   const [systemStatus, setSystemStatus] = useState<SystemStatus | null>(null)
   const [health, setHealth] = useState<HealthResponse | null>(null)
   const [templates, setTemplates] = useState<TemplateListItem[]>([])
@@ -144,7 +143,7 @@ export default function Dashboard() {
                 </Space>
               }
               value={connected ? '已连接' : '未连接'}
-              styles={{ value: { color: connected ? '#10b981' : '#ef4444', fontSize: 18 } }}
+              valueStyle={{ color: connected ? '#10b981' : '#ef4444', fontSize: 18 }}
               prefix={
                 <span
                   className="indicator-dot"
@@ -169,7 +168,7 @@ export default function Dashboard() {
                 </Space>
               }
               value={systemStatus?.active_sandboxes ?? '-'}
-              styles={{ value: { color: '#06b6d4', fontSize: 24 } }}
+              valueStyle={{ color: '#06b6d4', fontSize: 24 }}
             />
           </Card>
         </Col>
@@ -183,7 +182,7 @@ export default function Dashboard() {
                 </Space>
               }
               value={`${systemStatus?.built_templates ?? '-'} / ${systemStatus?.total_templates ?? '-'}`}
-              styles={{ value: { color: '#8b5cf6', fontSize: 24 } }}
+              valueStyle={{ color: '#8b5cf6', fontSize: 24 }}
             />
           </Card>
         </Col>
@@ -197,12 +196,10 @@ export default function Dashboard() {
                 </Space>
               }
               value={health?.version ?? '-'}
-              styles={{
-                value: {
-                  color: '#9ca3af',
-                  fontSize: 16,
-                  fontFamily: '"JetBrains Mono", monospace',
-                },
+              valueStyle={{
+                color: '#9ca3af',
+                fontSize: 16,
+                fontFamily: '"JetBrains Mono", monospace',
               }}
             />
           </Card>
